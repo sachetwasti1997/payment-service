@@ -1,7 +1,7 @@
 package com.sachet.payment_service.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.sachet.payment_service.config.EnvironmentConfiguration;
+import com.sachet.OrderDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -33,14 +33,20 @@ public class KafkaService {
 //    }
 
     @KafkaListener(topics = "order-created", groupId = "${spring.kafka.consumer.group-id}")
-    public void listenOrderCreated(String data) throws JsonProcessingException {
+    public void listenOrderCreated(OrderDto data) throws JsonProcessingException {
         LOGGER.info("Received order created event: {}", data);
-        orderService.consumeOrderCreatedEvent(data);
+        orderService.consumeOrderEvent(data);
     }
 
     @KafkaListener(topics = "order-cancelled", groupId = "${spring.kafka.consumer.group-id}")
-    public void listenOrderCancelled(String data) throws JsonProcessingException {
+    public void listenOrderCancelled(OrderDto data) throws JsonProcessingException {
         LOGGER.info("Received order cancelled event: {}", data);
+        orderService.consumeOrderEvent(data);
+    }
+
+    @KafkaListener(topics = "order-expired", groupId = "${spring.kafka.consumer.group-id}")
+    public void listenOrderExpired(OrderDto data) throws JsonProcessingException {
+        LOGGER.info("Received order expired event: {}", data);
         orderService.consumeOrderCancelledEvent(data);
     }
 }

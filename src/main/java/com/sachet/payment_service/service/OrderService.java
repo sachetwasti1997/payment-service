@@ -2,7 +2,7 @@ package com.sachet.payment_service.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sachet.payment_service.model.OrderDto;
+import com.sachet.OrderDto;
 import com.sachet.payment_service.model.Orders;
 import com.sachet.payment_service.repo.OrderRepository;
 import org.slf4j.Logger;
@@ -22,15 +22,29 @@ public class OrderService {
         this.objectMapper = objectMapper;
     }
 
-    public void consumeOrderCreatedEvent(String orderDto) throws JsonProcessingException {
-        Orders orders = objectMapper.readValue(orderDto, Orders.class);
-        LOGGER.info("Saving the Order created: {}", orders);
+    public void consumeOrderEvent(OrderDto orderDto) throws JsonProcessingException {
+        Orders orders = new Orders();
+        orders.setId(orderDto.getOrderId());
+        orders.setCount(orderDto.getCount());
+        orders.setPrice(orderDto.getPrice());
+        orders.setProductId(orderDto.getProductId());
+        orders.setStatus(orderDto.getStatus().toString());
+        orders.setUserId(orderDto.getBuyerEmail().toString());
+        orders.setSellerEmail(orderDto.getSellerEmail().toString());
+        LOGGER.info("Saving the Order: {}", orders);
         orderRepository.save(orders);
     }
 
-    public void consumeOrderCancelledEvent(String productDto) throws JsonProcessingException {
-        Orders product = objectMapper.readValue(productDto, Orders.class);
-        LOGGER.info("Saving the order cancelled: {}", product);
-        orderRepository.save(product);
+    public void consumeOrderCancelledEvent(OrderDto orderDto) throws JsonProcessingException {
+        Orders orders = new Orders();
+        orders.setId(orderDto.getOrderId());
+        orders.setPrice(orderDto.getPrice());
+        orders.setCount(orderDto.getCount());
+        orders.setStatus(orderDto.getStatus().toString());
+        orders.setUserId(orderDto.getBuyerEmail().toString());
+        orders.setProductId(orderDto.getProductId());
+        orders.setSellerEmail(orderDto.getSellerEmail().toString());
+        LOGGER.info("Saving the order cancelled: {}", orders);
+        orderRepository.save(orders);
     }
 }
