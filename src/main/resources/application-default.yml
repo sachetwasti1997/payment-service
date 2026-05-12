@@ -40,3 +40,4 @@ payment.config:
     maxLifeTime: 1800000
     maxPoolSize: 5
     poolName: payment-db
+  stripe_key: sk_test_51NExyrSJhWa009RS5jvIfzs2OGRp1lYSrQRYd4uoDUoT1Z3UFMzCiZJtdKSYG4za6QXtC18oino9yoPo1hDYI9mD00bR2buICA
